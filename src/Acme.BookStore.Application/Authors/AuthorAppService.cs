@@ -58,21 +58,49 @@ namespace Acme.BookStore.Authors
             var author= await _authorRepository.GetAsync(id);
             return ObjectMapper.Map<Author,AuthorDto>(author);
         }
-
         public async Task<PagedResultDto<AuthorDto>> GetListAsync(AuthorPagedAndSortedResultRequestDto input)
         {
             var filter = ObjectMapper.Map<AuthorPagedAndSortedResultRequestDto, AuthorFilter>(input);
 
             var sorting = (string.IsNullOrEmpty(input.Sorting) ? "Name DESC" : input.Sorting).Replace("ShortName", "Name");
 
-            var books = await _authorRepository.GetListAsync(input.SkipCount, input.MaxResultCount, sorting, filter);
-            var totalCount = await _authorRepository.GetTotalCountAsync(filter);
+            var temp = await _authorRepository.WithDetailsAsync();
 
+            var authors = await AsyncExecuter.ToListAsync(
+                temp
+                    .WhereIf(!filter.Name.IsNullOrWhiteSpace(), x => x.Name.Contains(filter.Name))
+                    .OrderBy(x=>sorting)
+                    .Skip(input.SkipCount)
+                    .Take(input.MaxResultCount)
+            );
 
-            var result = await _asyncExecuter.ToListAsync(books);
-            return new PagedResultDto<AuthorDto>(totalCount, ObjectMapper.Map<List<Author>, List<AuthorDto>>(result));
+            var totalCount = temp.Count();
+            var authorDtos = ObjectMapper.Map<List<Author>, List<AuthorDto>>(authors);
 
+            return new PagedResultDto<AuthorDto>(totalCount, authorDtos);
         }
+        //public async Task<PagedResultDto<AuthorDto>> GetListAsync(AuthorPagedAndSortedResultRequestDto input)
+        //{
+        //    var filter = ObjectMapper.Map<AuthorPagedAndSortedResultRequestDto, AuthorFilter>(input);
+
+        //    var sorting = (string.IsNullOrEmpty(input.Sorting) ? "Name DESC" : input.Sorting).Replace("ShortName", "Name");
+
+        //    var temp = await _authorRepository.GetListAsync(includeDetails:true);
+        //    var queryable = await _authorRepository.GetQueryableAsync();
+
+        //    var authors= await AsyncExecuter.ToListAsync(queryable
+        //        .WhereIf(!filter.Name.IsNullOrWhiteSpace(), x => x.Name.Contains(filter.Name))
+        //        .OrderBy(a=>input.Sorting)
+        //        .Skip(input.SkipCount)
+        //        .Take(input.MaxResultCount)
+
+        //        );
+        //    var totalCount =await _authorRepository.CountAsync();
+        //    var authorDtos=ObjectMapper.Map<List<Author>,List< AuthorDto >> (authors);
+
+        //    return new PagedResultDto<AuthorDto>(totalCount, authorDtos);
+
+        //}
         [Authorize(BookStorePermissions.Authors.Edit)]
         public async  Task UpdateAsync(Guid id, UpdateAuthorDto input)
         {

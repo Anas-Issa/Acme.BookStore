@@ -21,8 +21,6 @@ namespace Acme.BookStore.Books
             
         }
 
-       
-
         //public async Task<IQueryable<Book>> GetListAsync(int skipCount, int maxResultCount, string sorting = "Name", BookFilter filter = null)
         //{
 
@@ -50,27 +48,5 @@ namespace Acme.BookStore.Books
         //        ;
         //    return books.Count();
         //}
-
-        
-
-       
-
-        
-
-        
-
-       
-       
-        
-
-       
-
-       
-
-        
-
-        
-
-        
     }
 }

@@ -11,9 +11,10 @@ namespace Acme.BookStore.Authors
     {
         Task<Author> FindByNameAsync(string name);
 
-        Task<IQueryable<Author>> GetListAsync(int skipCount, int maxResultCount, string sorting, AuthorFilter filter = null );
+        // Task<IQueryable<Author>> GetListAsync(int skipCount, int maxResultCount, string sorting, AuthorFilter filter = null );
 
-        Task<int> GetTotalCountAsync(AuthorFilter filter);
-        Task<Author> GetAuthorWithBooksAsync(Guid id);
+        //Task<int> GetTotalCountAsync(AuthorFilter filter);
+        //Task<Author> GetAuthorWithBooksAsync(Guid id);
+        
     }
 }

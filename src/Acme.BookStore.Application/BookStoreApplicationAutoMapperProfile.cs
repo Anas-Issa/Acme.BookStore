@@ -20,11 +20,18 @@ public class BookStoreApplicationAutoMapperProfile : Profile
         CreateMap<CreateAuthorBooksDto, BookDto>();
 
         CreateMap<Author, AuthorDto>()
-            .ForMember(x => x.Books, o => o.MapFrom(x => x.Books.Select(t => new Book
+            .ForMember(x => x.Books, o => o.MapFrom(x => x.Books.Select(t => new BookDto
             {
 
-                Name = t.Name
-            }
+                Name = t.Name,
+                AuthorId = t.AuthorId,  
+                //TenantId = t.TenantId, 
+                AuthorName=x.Name
+                
+                
+               
+               
+    }
             )));
                 
             

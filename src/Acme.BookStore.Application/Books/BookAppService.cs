@@ -25,7 +25,6 @@ namespace Acme.BookStore.Books
                        CreateUpdateBookDto>, IBookAppService
     {
         private readonly IAuthorRepository _authorRepository;
-        //private readonly IBookRepository _bookRepository;
         private readonly IAsyncQueryableExecuter _asyncExecuter;
         private readonly IRepository<Book, Guid> _bookRepository;
 
@@ -97,24 +96,24 @@ namespace Acme.BookStore.Books
 
 
         }
-        private static string NormalizeSorting(string sorting)
-        {
-            if (sorting.IsNullOrEmpty())
-            {
-                return $"book.{nameof(Book.Name)}";
-            }
+        //private static string NormalizeSorting(string sorting)
+        //{
+        //    if (sorting.IsNullOrEmpty())
+        //    {
+        //        return $"book.{nameof(Book.Name)}";
+        //    }
 
-            if (sorting.Contains("authorName", StringComparison.OrdinalIgnoreCase))
-            {
-                return sorting.Replace(
-                    "authorName",
-                    "author.Name",
-                    StringComparison.OrdinalIgnoreCase
-                );
-            }
+        //    if (sorting.Contains("authorName", StringComparison.OrdinalIgnoreCase))
+        //    {
+        //        return sorting.Replace(
+        //            "authorName",
+        //            "author.Name",
+        //            StringComparison.OrdinalIgnoreCase
+        //        );
+        //    }
 
-            return $"book.{sorting}";
-        }
+        //    return $"book.{sorting}";
+        //}
         public async Task<ListResultDto<AuthorLookupDto>> GetAuthorLookupAsync()
         {
             var authors = await _authorRepository.GetListAsync();
