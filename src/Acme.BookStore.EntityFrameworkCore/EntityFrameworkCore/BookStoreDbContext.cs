@@ -101,10 +101,7 @@ public class BookStoreDbContext :
             b.ToTable(BookStoreConsts.DbTablePrefix + "Books", BookStoreConsts.DbSchema);
             b.ConfigureByConvention();
             b.Property(b => b.Name).IsRequired().HasMaxLength(256);
-            b.HasOne<Author>()
-            .WithMany()
-            .HasForeignKey(x => x.AuthorId)
-            .IsRequired();
+            
             b.HasMany(b=>b.Borrowers)
             .WithOne(mb=>mb.Book)
             .HasForeignKey(mb=>mb.BookId) 
@@ -129,10 +126,10 @@ public class BookStoreDbContext :
             b.ConfigureByConvention();
             b.Property(x => x.Name).IsRequired().HasMaxLength(128);
             b.HasIndex(x => x.Name);
-            b.HasMany(b => b.MemberBooks)
-         .WithOne(mb => mb.Member)
-         .HasForeignKey(mb => mb.MemberId)
-         .IsRequired();
+         //   b.HasMany(b => b.MemberBooks)
+         //.WithOne(mb => mb.Member)
+         //.HasForeignKey(mb => mb.MemberId)
+         //.IsRequired();
 
         });
         builder.Entity<MemberBook>(b =>
@@ -141,15 +138,15 @@ public class BookStoreDbContext :
             b.ConfigureByConvention();
             //b.HasKey(mb => new { mb.MemberId, mb.BookId });
 
-            b.HasOne(mb => mb.Member)
-                .WithMany(m => m.MemberBooks)
-                .HasForeignKey(mb => mb.MemberId)
-                .IsRequired();
+            //b.HasOne(mb => mb.Member)
+            //    .WithMany(m => m.MemberBooks)
+            //    .HasForeignKey(mb => mb.MemberId)
+            //    .IsRequired();
 
-            b.HasOne(mb => mb.Book)
-                .WithMany(b => b.Borrowers)
-                .HasForeignKey(mb => mb.BookId)
-                .IsRequired();
+            //b.HasOne(mb => mb.Book)
+            //    .WithMany(b => b.Borrowers)
+            //    .HasForeignKey(mb => mb.BookId)
+            //    .IsRequired();
         });
 
     }

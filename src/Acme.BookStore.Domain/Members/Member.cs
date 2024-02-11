@@ -14,7 +14,7 @@ namespace Acme.BookStore.Members
         public string Name { get; set; }
         public string Notes { get; set; }
 
-        public ICollection<MemberBook> MemberBooks { get; set; }
+        public virtual  ICollection<MemberBook> MemberBooks { get; set; }
 
 
 

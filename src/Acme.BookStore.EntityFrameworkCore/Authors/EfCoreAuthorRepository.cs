@@ -25,6 +25,15 @@ namespace Acme.BookStore.Authors
             return await DbSet.FirstOrDefaultAsync(author => author.Name == name);
         }
 
+       
+        public async Task<Author> GetAuthorWithBooksAsync(Guid id)
+        {
+            var dbSet = await GetDbSetAsync();
+            var author = await dbSet.FirstOrDefaultAsync(a => a.Id == id);
+            return author;
+
+        }
+
         public async Task<IQueryable<Author>> GetListAsync(
       int skipCount,
       int maxResultCount,
@@ -52,9 +61,7 @@ namespace Acme.BookStore.Authors
             //    .Take(maxResultCount)
             //    .ToListAsync();
         }
-        //public async Task<int> GetTotalCountAsync(BookFilter filter)
-        //{
-        //}
+      
 
         public async  Task<int> GetTotalCountAsync(AuthorFilter filter)
         {

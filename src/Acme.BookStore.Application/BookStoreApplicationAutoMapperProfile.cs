@@ -2,6 +2,7 @@
 using Acme.BookStore.Books;
 using Acme.BookStore.Members;
 using AutoMapper;
+using System.Linq;
 
 namespace Acme.BookStore;
 
@@ -18,12 +19,20 @@ public class BookStoreApplicationAutoMapperProfile : Profile
         CreateMap<CreateBookAuthorDto, Book>();
         CreateMap<CreateAuthorBooksDto, BookDto>();
 
-        CreateMap<Author, AuthorDto>();
+        CreateMap<Author, AuthorDto>()
+            .ForMember(x => x.Books, o => o.MapFrom(x => x.Books.Select(t => new Book
+            {
+
+                Name = t.Name
+            }
+            )));
+                
+            
         CreateMap<Author,AuthorLookupDto>();
 
         CreateMap<CreateAuthorDto, Author>();
         CreateMap<BookPagedAndSortedResultRequestDto, BookFilter>();
-        CreateMap<AuthorPAgedAndSortedResultRequestDto, AuthorFilter>();
+        CreateMap<AuthorPagedAndSortedResultRequestDto, AuthorFilter>();
         CreateMap<CreateBookAuthorDto, BookDto>();
 
 

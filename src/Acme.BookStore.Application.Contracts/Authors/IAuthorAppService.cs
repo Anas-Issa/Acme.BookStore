@@ -11,13 +11,14 @@ namespace Acme.BookStore.Authors
     {
         Task<AuthorDto> GetAsync(Guid id);
 
-        //Task<PagedResultDto<AuthorDto>> GetListAsync(GetAuthorListDto input);
-        //Task<List<AuthorDto>> GetListAsync(int skipCount, int maxResultCount, string sorting= "Name", AuthorFilter filter = null); Task<int> GetTotalCountAsync(AuthorFilter filter);
+        
 
         Task<AuthorDto> CreateAsync(CreateAuthorDto input);
 
         Task UpdateAsync(Guid id, UpdateAuthorDto input);
 
         Task DeleteAsync(Guid id);
+
+        Task<AuthorDto> GetAuthorWithBooksAsync(Guid id);
     }
 }

@@ -36,6 +36,10 @@
     "Permission:Authors": "Author Management",
     "Permission:Authors.Create": "Creating new authors",
     "Permission:Authors.Edit": "Editing the authors",
-    "Permission:Authors.Delete": "Deleting the authors"
+    "Permission:Authors.Delete": "Deleting the authors",
+    "Permission:Borrow": "Borrow Books Management",
+    "Permission:Borrow.Create": "Borrow New Book",
+    "Permission:Borrow.Edit": "Editing Borrow",
+    "Permission:v.Delete": "Deleting Borrow"
   }
 }

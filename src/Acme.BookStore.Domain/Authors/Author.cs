@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Acme.BookStore.Books;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,8 @@ namespace Acme.BookStore.Authors
         public DateTime BirthDate { get; set; }
         public string ShortBio { get; set; }
 
+
+        public virtual ICollection<Book> Books { get; set; }
 
         private Author()
         {

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Volo.Abp.Application.Dtos;
 
 namespace Acme.BookStore.Authors
 {
-    public  class UpdateAuthorDto
+    public  class UpdateAuthorDto : EntityDto<Guid>
     {
         [Required]
         [StringLength(AuthorConsts.MaxNameLength)]

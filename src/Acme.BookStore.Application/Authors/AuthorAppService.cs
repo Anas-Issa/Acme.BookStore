@@ -59,9 +59,9 @@ namespace Acme.BookStore.Authors
             return ObjectMapper.Map<Author,AuthorDto>(author);
         }
 
-        public async Task<PagedResultDto<AuthorDto>> GetListAsync(AuthorPAgedAndSortedResultRequestDto input)
+        public async Task<PagedResultDto<AuthorDto>> GetListAsync(AuthorPagedAndSortedResultRequestDto input)
         {
-            var filter = ObjectMapper.Map<AuthorPAgedAndSortedResultRequestDto, AuthorFilter>(input);
+            var filter = ObjectMapper.Map<AuthorPagedAndSortedResultRequestDto, AuthorFilter>(input);
 
             var sorting = (string.IsNullOrEmpty(input.Sorting) ? "Name DESC" : input.Sorting).Replace("ShortName", "Name");
 
@@ -89,6 +89,13 @@ namespace Acme.BookStore.Authors
             await _authorRepository.UpdateAsync(author);
         }
 
-        
+        public async Task<AuthorDto> GetAuthorWithBooksAsync(Guid id)
+        {
+            var author = await _authorRepository.GetAsync(id);
+            await _authorRepository.EnsureCollectionLoadedAsync(author,a=>a.Books);
+            
+            
+           return  ObjectMapper.Map<Author, AuthorDto>(author);
+        }
     }
 }

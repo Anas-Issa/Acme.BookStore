@@ -23,33 +23,33 @@ namespace Acme.BookStore.Books
 
        
 
-        public async Task<IQueryable<Book>> GetListAsync(int skipCount, int maxResultCount, string sorting = "Name", BookFilter filter = null)
-        {
+        //public async Task<IQueryable<Book>> GetListAsync(int skipCount, int maxResultCount, string sorting = "Name", BookFilter filter = null)
+        //{
 
-            var dbSet = await GetDbSetAsync();
-            var books =  dbSet
-                .WhereIf(!filter.Name.IsNullOrWhiteSpace(), x => x.Name.Contains(filter.Name))
-                .WhereIf(!filter.Price.IsNullOrWhiteSpace(), x => x.Price.ToString().Contains(filter.Price))
-                .WhereIf(!filter.PublishDate.IsNullOrWhiteSpace(), x => x.PublishDate.ToString().Contains(filter.PublishDate))
-                .OrderBy(sorting)
-                .Skip(skipCount)
-                .Take(maxResultCount);
+        //    var dbSet = await GetDbSetAsync();
+        //    var books =  dbSet
+        //        .WhereIf(!filter.Name.IsNullOrWhiteSpace(), x => x.Name.Contains(filter.Name))
+        //        .WhereIf(!filter.Price.IsNullOrWhiteSpace(), x => x.Price.ToString().Contains(filter.Price))
+        //        .WhereIf(!filter.PublishDate.IsNullOrWhiteSpace(), x => x.PublishDate.ToString().Contains(filter.PublishDate))
+        //        .OrderBy(sorting)
+        //        .Skip(skipCount)
+        //        .Take(maxResultCount);
                 
-            return books;
-        }
+        //    return books;
+        //}
 
        
 
-        public async Task<int> GetTotalCountAsync(BookFilter filter)
-        {
-            var dbSet = await GetDbSetAsync();
-            var books =  dbSet
-                .WhereIf(!filter.Name.IsNullOrWhiteSpace(), x => x.Name.Contains(filter.Name))
-                .WhereIf(!filter.Price.IsNullOrWhiteSpace(), x => x.Price.ToString().Contains(filter.Price))
-                .WhereIf(!filter.PublishDate.IsNullOrWhiteSpace(), x => x.PublishDate.ToString().Contains(filter.PublishDate))
-                ;
-            return books.Count();
-        }
+        //public async Task<int> GetTotalCountAsync(BookFilter filter)
+        //{
+        //    var dbSet = await GetDbSetAsync();
+        //    var books =  dbSet
+        //        .WhereIf(!filter.Name.IsNullOrWhiteSpace(), x => x.Name.Contains(filter.Name))
+        //        .WhereIf(!filter.Price.IsNullOrWhiteSpace(), x => x.Price.ToString().Contains(filter.Price))
+        //        .WhereIf(!filter.PublishDate.IsNullOrWhiteSpace(), x => x.PublishDate.ToString().Contains(filter.PublishDate))
+        //        ;
+        //    return books.Count();
+        //}
 
         
 

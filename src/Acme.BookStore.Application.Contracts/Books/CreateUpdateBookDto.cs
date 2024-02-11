@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Volo.Abp.Application.Dtos;
 
 namespace Acme.BookStore.Books
 {
-    public  class CreateUpdateBookDto
+    public  class CreateUpdateBookDto:EntityDto<Guid>
     {
         public Guid? TenantId { get; set; }
         public Guid AuthorId { get; set; }

@@ -48,6 +48,7 @@ public class BookStoreEntityFrameworkCoreModule : AbpModule
         {
                 /* The main point to change your DBMS.
                  * See also BookStoreMigrationsDbContextFactory for EF Core tooling. */
+            //options.PreConfigure<BookStoreDbContext>(options =>options.DbContextOptions.usela)
             options.UseSqlServer();
         });
 

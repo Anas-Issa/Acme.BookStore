@@ -1,6 +1,8 @@
 ﻿using Acme.BookStore.Authors;
 using Acme.BookStore.Permissions;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,14 +25,17 @@ namespace Acme.BookStore.Books
                        CreateUpdateBookDto>, IBookAppService
     {
         private readonly IAuthorRepository _authorRepository;
-        private readonly IBookRepository _bookRepository;
+        //private readonly IBookRepository _bookRepository;
         private readonly IAsyncQueryableExecuter _asyncExecuter;
+        private readonly IRepository<Book, Guid> _bookRepository;
 
-        public BookAppService(IAsyncQueryableExecuter asyncExecuter, IBookRepository bookRepository, IAuthorRepository authorRepository) :base(bookRepository) 
+
+        public BookAppService(IAsyncQueryableExecuter asyncExecuter, IRepository<Book, Guid> bookRepository, IAuthorRepository authorRepository) :base(bookRepository)
         {
             _asyncExecuter = asyncExecuter;
             _authorRepository = authorRepository;
-            _bookRepository = bookRepository;
+            _bookRepository=bookRepository;
+            //_bookRepository = bookRepository;
             GetPolicyName = BookStorePermissions.Books.Default;
             GetListPolicyName = BookStorePermissions.Books.Default;
             CreatePolicyName = BookStorePermissions.Books.Create;
@@ -68,14 +73,28 @@ namespace Acme.BookStore.Books
 
             var sorting = (string.IsNullOrEmpty(input.Sorting) ? "Name DESC" : input.Sorting).Replace("ShortName", "Name");
 
-            var books = await _bookRepository.GetListAsync(input.SkipCount, input.MaxResultCount, sorting, filter);
-            var totalCount = await _bookRepository.GetTotalCountAsync(filter);
+            var queryable = await _bookRepository.GetQueryableAsync();
+            //Get the books
+            var books = await AsyncExecuter.ToListAsync(
+                queryable
+                    .WhereIf(!input.Name.IsNullOrEmpty(), x => x.Name.Contains(input.Name)) // apply filtering
+                    .WhereIf(!filter.Price.IsNullOrWhiteSpace(), x => x.Price.ToString().Contains(filter.Price))
+                    .WhereIf(!filter.PublishDate.IsNullOrWhiteSpace(), x => x.PublishDate.ToString().Contains(filter.PublishDate))
+                    .OrderBy(b=>input.Sorting)
+                    .Skip(input.SkipCount)
+                    .Take(input.MaxResultCount)
+            );
+
+          
+            var totalCount = await _bookRepository.GetCountAsync();
+
+          
+
+            var bookDtos = ObjectMapper.Map<List<Book>, List<BookDto>>(books);
+
+            return new PagedResultDto<BookDto>(totalCount, bookDtos);
 
 
-            var result= await _asyncExecuter.ToListAsync(books);
-            return new PagedResultDto<BookDto>(totalCount, ObjectMapper.Map<List<Book>, List<BookDto>>(result));
-
-           
 
         }
         private static string NormalizeSorting(string sorting)

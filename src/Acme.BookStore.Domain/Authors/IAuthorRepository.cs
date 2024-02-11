@@ -14,5 +14,6 @@ namespace Acme.BookStore.Authors
         Task<IQueryable<Author>> GetListAsync(int skipCount, int maxResultCount, string sorting, AuthorFilter filter = null );
 
         Task<int> GetTotalCountAsync(AuthorFilter filter);
+        Task<Author> GetAuthorWithBooksAsync(Guid id);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Acme.BookStore.Members;
+﻿using Acme.BookStore.Authors;
+using Acme.BookStore.Members;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,8 @@ namespace Acme.BookStore.Books
         public DateTime PublishDate { get; set; }
         public float  Price { get; set; }
 
-        public ICollection<MemberBook> Borrowers { get; set; }
+         public virtual Author Author { get; set; }
+        public virtual  ICollection<MemberBook> Borrowers { get; set; }
 
     }
 }

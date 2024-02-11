@@ -22,6 +22,16 @@ public class BookStorePermissionDefinitionProvider : PermissionDefinitionProvide
             BookStorePermissions.Authors.Edit, L("Permission:Authors.Edit"));
         authorsPermission.AddChild(
             BookStorePermissions.Authors.Delete, L("Permission:Authors.Delete"));
+
+
+        var borrowBooksPermission = bookStoreGroup.AddPermission(
+            BookStorePermissions.BorrowBooks.Default, L("Permissions:Borrow")) ;
+        borrowBooksPermission.AddChild(
+            BookStorePermissions.BorrowBooks.Create, L("Permissions:Borrow.Create"));
+        borrowBooksPermission.AddChild(
+            BookStorePermissions.BorrowBooks.Edit, L("Permissions:Borrow.Edit"));
+        borrowBooksPermission.AddChild(
+            BookStorePermissions.BorrowBooks.Delete, L("Permissions:Borrow.Delete"));
         //Define your own permissions here. Example:
         //myGroup.AddPermission(BookStorePermissions.MyPermission1, L("Permission:MyPermission1"));
     }
