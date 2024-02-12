@@ -29,11 +29,11 @@ namespace Acme.BookStore.Authors
         {
             return (await GetQueryableAsync()).IncludeDetails();
         }
-        public async Task<List<Author>> GetListwithDetailsAsync( int skipCount, int maxResultCount, string sorting = "Name", AuthorFilter filter = null,bool includeDetails = true)
+        public async Task<List<Author>> GetListwithDetailsAsync( int skipCount, int maxResultCount, string sorting = "Name", AuthorFilter filter = null)
         {
             try
             {
-                var queryable = (await base.GetListAsync(includeDetails)).AsQueryable();
+                var queryable = (await base.GetListAsync(includeDetails:true)).AsQueryable();
 
                 var result =  queryable
                     .WhereIf(!filter.Name.IsNullOrWhiteSpace(), x => x.Name.Contains(filter.Name))

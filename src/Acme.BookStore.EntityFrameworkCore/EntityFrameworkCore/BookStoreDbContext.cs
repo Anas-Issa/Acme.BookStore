@@ -149,5 +149,12 @@ public class BookStoreDbContext :
             //    .IsRequired();
         });
 
+        builder.Entity<BookTranslation>(b =>
+        {
+            b.ToTable(BookStoreConsts.DbTablePrefix + "BookTranslations", BookStoreConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.HasKey(x=> new { x.BookId, x.language });
+        });
+
     }
 }

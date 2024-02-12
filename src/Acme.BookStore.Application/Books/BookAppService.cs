@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -17,6 +18,9 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Acme.BookStore.Books
 {
+    /// <summary>
+    /// Represent a Book Entity
+    /// </summary>
     public  class BookAppService : 
         CrudAppService<Book,
                        BookDto,
@@ -41,7 +45,12 @@ namespace Acme.BookStore.Books
             UpdatePolicyName = BookStorePermissions.Books.Edit;
             DeletePolicyName= BookStorePermissions.Books.Delete;
         }
-
+        /// <summary>
+        /// Get book with id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="EntityNotFoundException"></exception>
         public override async Task<BookDto> GetAsync(Guid id)
         {
             //Get the IQueryable<Book> from the repository
@@ -223,11 +232,31 @@ namespace Acme.BookStore.Books
 
         }
 
+        public async Task AddTranslationsAsync(Guid id, AddBookTranslationDto input)
+        {
+            var queryable =await Repository.GetQueryableAsync();
+           // var bookquery = queryable.FirstOrDefault(b=>b.Id==id);
+
+            var book = await AsyncExecuter.FirstOrDefaultAsync(queryable, x => x.Id == id);
+
+            if ( book.Translations!= null &&  book.Translations.Any(b => b.language == input.Language)  )
+            {
+                throw new UserFriendlyException($"Thers is already translation in {input.Language}");
+            }
+            book.Translations.Add(new BookTranslation
+            {
+                BookId = id,
+                language = input.Language,
+                 Name=input.Name
+            });
+            await _bookRepository.UpdateAsync(book);
+        }
+
 
         //public override async Task<BookDto> CreateAsync(CreateUpdateBookDto input)
         //{
         //    var book=ObjectMapper.Map<CreateUpdateBookDto,Book>(input);
-            
+
         //    await _bookRepository.InsertAsync(book);
         //    return ObjectMapper.Map<CreateUpdateBookDto, BookDto>(input);
         //}

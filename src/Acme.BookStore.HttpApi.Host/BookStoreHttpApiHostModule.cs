@@ -29,6 +29,7 @@ using Volo.Abp.Security.Claims;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
+using System.Reflection;
 
 namespace Acme.BookStore;
 
@@ -149,6 +150,10 @@ public class BookStoreHttpApiHostModule : AbpModule
             },
             options =>
             {
+                // Include the XML comments file
+                //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                //options.IncludeXmlComments(xmlPath);
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "BookStore API", Version = "v1" });
                 options.DocInclusionPredicate((docName, description) => true);
                 options.CustomSchemaIds(type => type.FullName);

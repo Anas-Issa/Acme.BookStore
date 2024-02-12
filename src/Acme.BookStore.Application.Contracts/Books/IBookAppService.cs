@@ -16,5 +16,7 @@ namespace Acme.BookStore.Books
         Task <ListResultDto<AuthorLookupDto>> GetAuthorLookupAsync();
 
         Task<AuthorBooksDto> CreateAuthorBooksAsync(CreateAuthorBooksDto input);
+
+        Task AddTranslationsAsync (Guid id,AddBookTranslationDto input);
     }
 }

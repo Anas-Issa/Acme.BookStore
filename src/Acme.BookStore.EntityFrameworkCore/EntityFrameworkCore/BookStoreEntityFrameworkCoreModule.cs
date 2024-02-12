@@ -12,6 +12,9 @@ using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.DependencyInjection;
+using Acme.BookStore.Books;
+using Microsoft.EntityFrameworkCore;
 
 namespace Acme.BookStore.EntityFrameworkCore;
 
@@ -50,6 +53,14 @@ public class BookStoreEntityFrameworkCoreModule : AbpModule
                  * See also BookStoreMigrationsDbContextFactory for EF Core tooling. */
             //options.PreConfigure<BookStoreDbContext>(options =>options.DbContextOptions.usela)
             options.UseSqlServer();
+        });
+
+        Configure<AbpEntityOptions>(options =>
+        {
+            options.Entity<Book>(bookOptions =>
+            {
+                bookOptions.DefaultWithDetailsFunc = query => query.Include(b => b.Translations);
+            });
         });
 
     }
