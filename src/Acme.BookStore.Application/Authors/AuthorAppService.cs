@@ -64,17 +64,15 @@ namespace Acme.BookStore.Authors
 
             var sorting = (string.IsNullOrEmpty(input.Sorting) ? "Name DESC" : input.Sorting).Replace("ShortName", "Name");
 
-            var temp = await _authorRepository.WithDetailsAsync();
+            var authors = await _authorRepository.GetListwithDetailsAsync(input.SkipCount,input.MaxResultCount,sorting,filter,true);
 
-            var authors = await AsyncExecuter.ToListAsync(
-                temp
-                    .WhereIf(!filter.Name.IsNullOrWhiteSpace(), x => x.Name.Contains(filter.Name))
-                    .OrderBy(x=>sorting)
-                    .Skip(input.SkipCount)
-                    .Take(input.MaxResultCount)
-            );
+            //var authors = temp;
+        //    await AsyncExecuter.ToListAsync(
+        //    temp
+                
+        //);
 
-            var totalCount = temp.Count();
+            var totalCount = authors.Count();
             var authorDtos = ObjectMapper.Map<List<Author>, List<AuthorDto>>(authors);
 
             return new PagedResultDto<AuthorDto>(totalCount, authorDtos);

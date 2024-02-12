@@ -25,7 +25,6 @@ public class BookStoreApplicationAutoMapperProfile : Profile
 
                 Name = t.Name,
                 AuthorId = t.AuthorId,  
-                //TenantId = t.TenantId, 
                 AuthorName=x.Name
                 
                 

@@ -79,7 +79,7 @@ namespace Acme.BookStore.Books
                     .WhereIf(!input.Name.IsNullOrEmpty(), x => x.Name.Contains(input.Name)) // apply filtering
                     .WhereIf(!filter.Price.IsNullOrWhiteSpace(), x => x.Price.ToString().Contains(filter.Price))
                     .WhereIf(!filter.PublishDate.IsNullOrWhiteSpace(), x => x.PublishDate.ToString().Contains(filter.PublishDate))
-                    .OrderBy(b=>input.Sorting)
+                    .OrderBy(x=>sorting)
                     .Skip(input.SkipCount)
                     .Take(input.MaxResultCount)
             );

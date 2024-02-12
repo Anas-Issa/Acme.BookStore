@@ -29,11 +29,28 @@ namespace Acme.BookStore.Authors
         {
             return (await GetQueryableAsync()).IncludeDetails();
         }
-        public async Task<IQueryable<Author>> GetListAsync(bool includeDetails = true)
+        public async Task<List<Author>> GetListwithDetailsAsync( int skipCount, int maxResultCount, string sorting = "Name", AuthorFilter filter = null,bool includeDetails = true)
         {
-            //var dbset = GetDbSetAsync();
-            
-            return  base.GetListAsync(includeDetails).As<IQueryable<Author>>();
+            try
+            {
+                var queryable = (await base.GetListAsync(includeDetails)).AsQueryable();
+
+                var result =  queryable
+                    .WhereIf(!filter.Name.IsNullOrWhiteSpace(), x => x.Name.Contains(filter.Name))
+                    .OrderBy(sorting)
+                    .Skip(skipCount)
+                    .Take(maxResultCount)
+                    .ToList();
+                    
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Handle exception
+                throw;
+            }
+
         }
         //public async Task<Author> GetAuthorWithBooksAsync(Guid id)
         //{
@@ -83,7 +100,7 @@ namespace Acme.BookStore.Authors
         //}
     }
 
-    public static class OrdersQueryableExtensions
+    public static class AuthorsQueryableExtensions
     {
         public static IQueryable<Author> IncludeDetails(
             this IQueryable<Author> queryable,
