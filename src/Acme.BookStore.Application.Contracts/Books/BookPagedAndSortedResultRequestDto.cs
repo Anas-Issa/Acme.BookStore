@@ -10,6 +10,6 @@ namespace Acme.BookStore.Books
         public string? Name { get; set; }
         public string? PublishDate { get; set; }
         public string? Price { get; set; }
-        public bool? IsAscending { get; set; }  
+        //public bool? IsAscending { get; set; }  
     } 
 }

@@ -66,35 +66,83 @@ namespace Acme.BookStore.Books
         }
         public  override async Task<PagedResultDto<BookDto>> GetListAsync(BookPagedAndSortedResultRequestDto input)
         {
-
-
             var filter = ObjectMapper.Map<BookPagedAndSortedResultRequestDto, BookFilter>(input);
 
-            var sorting = (string.IsNullOrEmpty(input.Sorting) ? "Name DESC" : input.Sorting).Replace("ShortName", "Name");
+            var sorting = string.IsNullOrEmpty(input.Sorting) ? "Name" : input.Sorting.Replace("ShortName", "Name");
 
             var queryable = await _bookRepository.GetQueryableAsync();
-            //Get the books
-            var books = await AsyncExecuter.ToListAsync(
-                queryable
-                    .WhereIf(!input.Name.IsNullOrEmpty(), x => x.Name.Contains(input.Name)) // apply filtering
-                    .WhereIf(!filter.Price.IsNullOrWhiteSpace(), x => x.Price.ToString().Contains(filter.Price))
-                    .WhereIf(!filter.PublishDate.IsNullOrWhiteSpace(), x => x.PublishDate.ToString().Contains(filter.PublishDate))
-                    .OrderBy(x=>sorting)
-                    .Skip(input.SkipCount)
-                    .Take(input.MaxResultCount)
-            );
 
-          
-            var totalCount = await _bookRepository.GetCountAsync();
+            // Apply filtering
+            var filteredQueryable = queryable
+                .WhereIf(!input.Name.IsNullOrEmpty(), x => x.Name.Contains(input.Name))
+                .WhereIf(!filter.Price.IsNullOrWhiteSpace(), x => x.Price.ToString().Contains(filter.Price))
+                .WhereIf(!filter.PublishDate.IsNullOrWhiteSpace(), x => x.PublishDate.ToString().Contains(filter.PublishDate));
 
-          
+            // Execute query and retrieve results into memory
+            var books =await  AsyncExecuter.ToListAsync(filteredQueryable);
+
+            // Apply sorting on the client side
+            books = ApplySorting(books, sorting);
+
+            var totalCount = books.Count;
+
+            // Apply paging
+            books = books.Skip(input.SkipCount).Take(input.MaxResultCount).ToList();
 
             var bookDtos = ObjectMapper.Map<List<Book>, List<BookDto>>(books);
 
             return new PagedResultDto<BookDto>(totalCount, bookDtos);
 
+            //var filter = ObjectMapper.Map<BookPagedAndSortedResultRequestDto, BookFilter>(input);
+
+            //var sorting = (string.IsNullOrEmpty(input.Sorting) ? "Name DESC" : input.Sorting).Replace("ShortName", "Name");
+
+            //var queryable = await _bookRepository.GetQueryableAsync();
+            //var books = new List<Book>(); 
+            ////Get the books
+            //try
+            //{
+            // books = await AsyncExecuter.ToListAsync(
+            //    queryable
+            //        .WhereIf(!input.Name.IsNullOrEmpty(), x => x.Name.Contains(input.Name)) // apply filtering
+            //        .WhereIf(!filter.Price.IsNullOrWhiteSpace(), x => x.Price.ToString().Contains(filter.Price))
+            //        .WhereIf(!filter.PublishDate.IsNullOrWhiteSpace(), x => x.PublishDate.ToString().Contains(filter.PublishDate))
+            //        .OrderBy(x => sorting, StringComparer.OrdinalIgnoreCase).Skip(input.SkipCount)
+            //        .Take(input.MaxResultCount)
+            //);
 
 
+            //}
+            //catch (Exception ex)
+            //{
+
+            //    throw;
+            //}
+
+            //var totalCount = await _bookRepository.GetCountAsync();
+
+
+
+            //var bookDtos = ObjectMapper.Map<List<Book>, List<BookDto>>(books);
+
+            //return new PagedResultDto<BookDto>(totalCount, bookDtos);
+
+
+
+        }
+        private List<Book> ApplySorting(List<Book> books, string sorting)
+        {
+            // Apply sorting on the client side
+            if (!string.IsNullOrEmpty(sorting))
+            {
+                var sortedBooks = sorting.EndsWith("DESC", StringComparison.OrdinalIgnoreCase)
+                    ? books.OrderByDescending(x => x.GetType().GetProperty(sorting)).ToList()
+                    : books.OrderBy(x => x.GetType().GetProperty(sorting).GetValue(x, null)).ToList();
+
+                return sortedBooks;
+            }
+
+            return books;
         }
         //private static string NormalizeSorting(string sorting)
         //{
