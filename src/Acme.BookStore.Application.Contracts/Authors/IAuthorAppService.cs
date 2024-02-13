@@ -11,14 +11,8 @@ namespace Acme.BookStore.Authors
     {
         Task<AuthorDto> GetAsync(Guid id);
 
-        
+       Task DeleteAsync(Guid id);
 
-        //Task<AuthorDto> CreateAsync(CreateAuthorDto input);
-
-       // Task UpdateAsync(Guid id, UpdateAuthorDto input);
-
-        Task DeleteAsync(Guid id);
-
-        //Task<AuthorDto> GetAuthorWithBooksAsync(Guid id);
+  
     }
 }

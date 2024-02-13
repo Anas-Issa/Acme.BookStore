@@ -25,7 +25,6 @@ namespace Acme.BookStore.Books
 
         public override async Task<IQueryable<Book>> WithDetailsAsync()
         {
-            // Uses the extension method defined above
             return (await GetQueryableAsync()).IncludeDetails();
         }
 
