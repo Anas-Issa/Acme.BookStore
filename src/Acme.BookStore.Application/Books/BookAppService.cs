@@ -39,8 +39,6 @@ namespace Acme.BookStore.Books
         {
        
             _authorRepository = authorRepository;
-            //_bookRepository=bookRepository;
-            //_bookRepository = bookRepository;
             GetPolicyName = BookStorePermissions.Books.Default;
             GetListPolicyName = BookStorePermissions.Books.Default;
             CreatePolicyName = BookStorePermissions.Books.Create;
@@ -136,7 +134,6 @@ namespace Acme.BookStore.Books
         public async Task AddTranslationsAsync(Guid id, AddBookTranslationDto input)
         {
             var queryable =await Repository.GetQueryableAsync();
-           // var bookquery = queryable.FirstOrDefault(b=>b.Id==id);
 
             var book = await AsyncExecuter.FirstOrDefaultAsync(queryable, x => x.Id == id);
 
@@ -157,13 +154,13 @@ namespace Acme.BookStore.Books
         {
          
       
-            var temp = (await Repository.WithDetailsAsync())
+            return (await Repository.WithDetailsAsync())
                 .WhereIf(!input.Name.IsNullOrEmpty(), x => x.Name.Contains(input.Name))
                 .WhereIf(input.MinPrice.HasValue, x => x.Price >= input.MinPrice)
                 .WhereIf(input.MaxPrice.HasValue, x => x.Price <= input.MaxPrice)
                 .WhereIf(input.PublishDate.HasValue, x => x.PublishDate.Date == input.PublishDate.Value.Date)
                 ;
-            return temp;
+           
         }
         public override  Task<PagedResultDto<BookDto>> GetListAsync(BookPagedAndSortedResultRequestDto input)
         {

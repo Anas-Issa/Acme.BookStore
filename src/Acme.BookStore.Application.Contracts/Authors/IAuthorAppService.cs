@@ -13,12 +13,12 @@ namespace Acme.BookStore.Authors
 
         
 
-        Task<AuthorDto> CreateAsync(CreateAuthorDto input);
+        //Task<AuthorDto> CreateAsync(CreateAuthorDto input);
 
-        Task UpdateAsync(Guid id, UpdateAuthorDto input);
+       // Task UpdateAsync(Guid id, UpdateAuthorDto input);
 
         Task DeleteAsync(Guid id);
 
-        Task<AuthorDto> GetAuthorWithBooksAsync(Guid id);
+        //Task<AuthorDto> GetAuthorWithBooksAsync(Guid id);
     }
 }
