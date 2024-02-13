@@ -8,7 +8,7 @@ namespace Acme.BookStore.Authors
 {
     public  class AuthorDto :EntityDto<Guid>
     {
-        public Guid TenantId { get; set; }
+        //public Guid TenantId { get; set; }
         public string Name { get; set; }
         public DateTime BirthDate { get; set; }
         public string  ShortBio { get; set; }

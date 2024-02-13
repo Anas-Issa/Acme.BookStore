@@ -8,6 +8,6 @@ namespace Acme.BookStore.Books
     public  class CreateAuthorBooksDto
     {
         public CreateAuthorDto Author { get; set; }
-        public List<CreateBookAuthorDto> Books { get; set; } = new List<CreateBookAuthorDto>();
+        public List<CreateUpdateBookDto> Books { get; set; } = new List<CreateUpdateBookDto>();
     }
 }

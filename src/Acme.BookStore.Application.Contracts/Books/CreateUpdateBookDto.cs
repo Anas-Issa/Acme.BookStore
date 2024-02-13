@@ -8,7 +8,7 @@ namespace Acme.BookStore.Books
 {
     public  class CreateUpdateBookDto:EntityDto<Guid>
     {
-        public Guid? TenantId { get; set; }
+        //public Guid? TenantId { get; set; }
         public Guid AuthorId { get; set; }
         [Required]
         [StringLength(128)]

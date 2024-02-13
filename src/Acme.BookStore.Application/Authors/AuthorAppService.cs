@@ -65,13 +65,6 @@ namespace Acme.BookStore.Authors
             var sorting = (string.IsNullOrEmpty(input.Sorting) ? "Name DESC" : input.Sorting).Replace("ShortName", "Name");
 
             var authors = await _authorRepository.GetListwithDetailsAsync(input.SkipCount,input.MaxResultCount,sorting,filter);
-
-            //var authors = temp;
-        //    await AsyncExecuter.ToListAsync(
-        //    temp
-                
-        //);
-
             var totalCount = authors.Count();
             var authorDtos = ObjectMapper.Map<List<Author>, List<AuthorDto>>(authors);
 

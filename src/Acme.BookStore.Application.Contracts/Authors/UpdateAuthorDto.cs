@@ -6,7 +6,7 @@ using Volo.Abp.Application.Dtos;
 
 namespace Acme.BookStore.Authors
 {
-    public  class UpdateAuthorDto : EntityDto<Guid>
+    public  class UpdateAuthorDto
     {
         [Required]
         [StringLength(AuthorConsts.MaxNameLength)]

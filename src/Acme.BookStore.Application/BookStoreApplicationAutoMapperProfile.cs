@@ -16,32 +16,31 @@ public class BookStoreApplicationAutoMapperProfile : Profile
 
         CreateMap<Book, BookDto>();
         CreateMap<CreateUpdateBookDto, Book>();
-        CreateMap<CreateBookAuthorDto, Book>();
-        CreateMap<CreateAuthorBooksDto, BookDto>();
+        CreateMap<CreateUpdateBookDto, BookDto>();
+  
 
         CreateMap<Author, AuthorDto>()
             .ForMember(x => x.Books, o => o.MapFrom(x => x.Books.Select(t => new BookDto
             {
 
                 Name = t.Name,
-                AuthorId = t.AuthorId,  
-                AuthorName=x.Name
+                //AuthorId = t.AuthorId,  
+                AuthorName=x.Name,
+                Price = t.Price,
+                Type=t.Type,
+                PublishDate = t.PublishDate,
+                Id =t.Id,   
                 
                 
-               
-               
+                
     }
             )));
                 
             
         CreateMap<Author,AuthorLookupDto>();
-
         CreateMap<CreateAuthorDto, Author>();
         CreateMap<BookPagedAndSortedResultRequestDto, BookFilter>();
         CreateMap<AuthorPagedAndSortedResultRequestDto, AuthorFilter>();
-        CreateMap<CreateBookAuthorDto, BookDto>();
-
-
         CreateMap<CreateUpdateMemberDto, Member>();
         CreateMap <Member, MemberDto>();
 

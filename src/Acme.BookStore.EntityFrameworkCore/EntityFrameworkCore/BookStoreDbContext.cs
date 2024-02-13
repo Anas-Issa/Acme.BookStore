@@ -118,6 +118,12 @@ public class BookStoreDbContext :
             .IsRequired()
             .HasMaxLength(AuthorConsts.MaxNameLength);
             b.HasIndex(x => x.Name);
+
+            b.HasMany(a => a.Books)
+            .WithOne(b => b.Author)
+            .HasForeignKey(b => b.AuthorId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         });
 
         builder.Entity<Member>(b =>

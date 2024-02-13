@@ -35,7 +35,7 @@ namespace Acme.BookStore
             return new BookDto
             {
                 Id = source.Id,
-                AuthorId = source.AuthorId,
+                //AuthorId = source.AuthorId,
                 Type = source.Type,
                 Name = translation?.Name ?? source.Name,
                 PublishDate = source.PublishDate,
@@ -44,7 +44,9 @@ namespace Acme.BookStore
                 CreationTime = source.CreationTime,
                 CreatorId = source.CreatorId,
                 LastModificationTime = source.LastModificationTime,
-                LastModifierId = source.LastModifierId
+                LastModifierId = source.LastModifierId,
+       
+                
             };
         }
 

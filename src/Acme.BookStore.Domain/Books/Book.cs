@@ -11,7 +11,7 @@ using Volo.Abp.MultiTenancy;
 
 namespace Acme.BookStore.Books
 {
-    public  class Book :AuditedAggregateRoot<Guid>,IMultiTenant,IMultiLingualObjects<BookTranslation>
+    public  class Book : FullAuditedAggregateRoot<Guid>,IMultiTenant,IMultiLingualObjects<BookTranslation>
     {
         public Book()
         {

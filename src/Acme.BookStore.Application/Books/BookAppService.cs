@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -77,7 +78,7 @@ namespace Acme.BookStore.Books
         {
             var filter = ObjectMapper.Map<BookPagedAndSortedResultRequestDto, BookFilter>(input);
 
-            var sorting = string.IsNullOrEmpty(input.Sorting) ? "Name" : input.Sorting.Replace("ShortName", "Name");
+            var sorting = string.IsNullOrEmpty(input.Sorting) ? "Name" : input.Sorting;
 
             var queryable = await _bookRepository.GetQueryableAsync();
 
@@ -139,20 +140,65 @@ namespace Acme.BookStore.Books
 
 
         }
+
         private List<Book> ApplySorting(List<Book> books, string sorting)
         {
             // Apply sorting on the client side
             if (!string.IsNullOrEmpty(sorting))
             {
-                var sortedBooks = sorting.EndsWith("DESC", StringComparison.OrdinalIgnoreCase)
-                    ? books.OrderByDescending(x => x.GetType().GetProperty(sorting)).ToList()
-                    : books.OrderBy(x => x.GetType().GetProperty(sorting).GetValue(x, null)).ToList();
+                var propertyName = sorting.Trim();
+                var isDescending = propertyName.EndsWith("DESC", StringComparison.OrdinalIgnoreCase);
+                var isAscending = propertyName.EndsWith("ASC", StringComparison.OrdinalIgnoreCase);
+
+                // Remove "DESC" from the property name
+                if (isDescending)
+                {
+                    propertyName = propertyName.Substring(0, propertyName.Length - 4).Trim();
+                }
+                else if(isAscending) 
+                {
+                    propertyName = propertyName.Substring(0, propertyName.Length - 3).Trim();
+                }
+
+                // Convert property name and values to lowercase for case-insensitive comparison
+                var sortedBooks = isDescending
+                    ? books.OrderByDescending(x => GetPropertyValue(x, propertyName)).ToList()
+                    : books.OrderBy(x => GetPropertyValue(x, propertyName)).ToList();
 
                 return sortedBooks;
             }
 
             return books;
         }
+
+        private object GetPropertyValue(Book book, string propertyName)
+        {
+            // Use reflection to get the property value by name
+            var propertyInfo = typeof(Book).GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+
+            // If propertyInfo is null, the property doesn't exist
+            if (propertyInfo == null)
+            {
+                // You can handle this case as needed, for example, throw an exception or log an error
+                throw new ArgumentException($"Property '{propertyName}' does not exist in type 'Book'");
+            }
+
+            return propertyInfo.GetValue(book, null);
+        }
+        //private List<Book> ApplySorting(List<Book> books, string sorting)
+        //{
+        //    // Apply sorting on the client side
+        //    if (!string.IsNullOrEmpty(sorting))
+        //    {
+        //        var sortedBooks = sorting.EndsWith("DESC", StringComparison.OrdinalIgnoreCase)
+        //            ? books.OrderByDescending(x => x.GetType().GetProperty(sorting)).ToList()
+        //            : books.OrderBy(x => x.GetType().GetProperty(sorting).GetValue(x, null)).ToList();
+
+        //        return sortedBooks;
+        //    }
+
+        //    return books;
+        //}
         //private static string NormalizeSorting(string sorting)
         //{
         //    if (sorting.IsNullOrEmpty())
@@ -196,14 +242,14 @@ namespace Acme.BookStore.Books
 
                 foreach (var item in input.Books)
                 {
-                    var book = ObjectMapper.Map<CreateBookAuthorDto, Book>(item);
+                    var book = ObjectMapper.Map<CreateUpdateBookDto, Book>(item);
                     book.AuthorId = authorId;
                     await _bookRepository.InsertAsync(book);
                 }
                  result = new AuthorBooksDto
                 {
                     AuthorId = authorId,
-                    Books = ObjectMapper.Map<List<CreateBookAuthorDto>, List<BookDto>>(input.Books),
+                    Books = ObjectMapper.Map<List<CreateUpdateBookDto>, List<BookDto>>(input.Books),
 
                     Name = input.Author.Name,
                 };
