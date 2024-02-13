@@ -14,7 +14,9 @@ public class BookStoreApplicationAutoMapperProfile : Profile
          * Alternatively, you can split your mapping configurations
          * into multiple profile classes for a better organization. */
 
-        CreateMap<Book, BookDto>();
+        //CreateMap<Book, BookDto>()
+        //    .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name))
+        //    .ForMember(dest=>dest.language,opt=>opt.MapFrom(src=>src.Translations.Where(t=>t.BookId==src.Id).FirstOrDefault().Name));
         CreateMap<CreateUpdateBookDto, Book>();
         CreateMap<CreateUpdateBookDto, BookDto>();
   
@@ -24,7 +26,6 @@ public class BookStoreApplicationAutoMapperProfile : Profile
             {
 
                 Name = t.Name,
-                //AuthorId = t.AuthorId,  
                 AuthorName=x.Name,
                 Price = t.Price,
                 Type=t.Type,

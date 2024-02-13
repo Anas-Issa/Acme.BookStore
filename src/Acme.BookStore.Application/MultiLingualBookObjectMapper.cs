@@ -1,4 +1,5 @@
-﻿using Acme.BookStore.Books;
+﻿using Acme.BookStore.Authors;
+using Acme.BookStore.Books;
 using Acme.BookStore.MultiLingualObjects;
 using System;
 using System.Collections.Generic;
@@ -32,10 +33,11 @@ namespace Acme.BookStore
             var translation = AsyncHelper.RunSync(async () =>
                 _multiLingualObjectManager.FindTranslationAsync<Book, BookTranslation>(source));
 
+
             return new BookDto
             {
                 Id = source.Id,
-                //AuthorId = source.AuthorId,
+                AuthorName = source.Author?.Name,
                 Type = source.Type,
                 Name = translation?.Name ?? source.Name,
                 PublishDate = source.PublishDate,
@@ -45,8 +47,8 @@ namespace Acme.BookStore
                 CreatorId = source.CreatorId,
                 LastModificationTime = source.LastModificationTime,
                 LastModifierId = source.LastModifierId,
-       
-                
+
+
             };
         }
 

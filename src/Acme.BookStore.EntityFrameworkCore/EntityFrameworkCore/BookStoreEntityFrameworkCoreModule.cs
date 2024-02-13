@@ -59,7 +59,8 @@ public class BookStoreEntityFrameworkCoreModule : AbpModule
         {
             options.Entity<Book>(bookOptions =>
             {
-                bookOptions.DefaultWithDetailsFunc = query => query.Include(b => b.Translations);
+                //bookOptions.DefaultWithDetailsFunc=query => query.Include(b => b.Author);
+                //bookOptions.DefaultWithDetailsFunc = query => query.Include(b => b.Translations);
             });
         });
 

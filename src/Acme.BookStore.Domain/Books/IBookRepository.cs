@@ -10,6 +10,6 @@ namespace Acme.BookStore.Books
 {
     public  interface IBookRepository : IRepository<Book,Guid>
     {
-
+        
     }
 }

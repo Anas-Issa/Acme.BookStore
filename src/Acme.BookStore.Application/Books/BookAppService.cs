@@ -32,14 +32,14 @@ namespace Acme.BookStore.Books
     {
         private readonly IAuthorRepository _authorRepository;
         
-        private readonly IRepository<Book, Guid> _bookRepository;
+        //private readonly IRepository<Book,Guid> _bookRepository;
 
 
-        public BookAppService( IRepository<Book, Guid> bookRepository, IAuthorRepository authorRepository) :base(bookRepository)
+        public BookAppService( IAuthorRepository authorRepository, IRepository<Book, Guid> Repository) :base(Repository)
         {
        
             _authorRepository = authorRepository;
-            _bookRepository=bookRepository;
+            //_bookRepository=bookRepository;
             //_bookRepository = bookRepository;
             GetPolicyName = BookStorePermissions.Books.Default;
             GetListPolicyName = BookStorePermissions.Books.Default;
@@ -47,34 +47,29 @@ namespace Acme.BookStore.Books
             UpdatePolicyName = BookStorePermissions.Books.Edit;
             DeletePolicyName= BookStorePermissions.Books.Delete;
         }
-        /// <summary>
-        /// Get book with id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        /// <exception cref="EntityNotFoundException"></exception>
-        public override async Task<BookDto> GetAsync(Guid id)
-        {
-            //Get the IQueryable<Book> from the repository
-            var queryable = await _bookRepository.GetQueryableAsync();
+ 
+        //public override async Task<BookDto> GetAsync(Guid id)
+        //{
+        //    //Get the IQueryable<Book> from the repository
+        //    var queryable = await _bookRepository.GetQueryableAsync();
 
-            //Prepare a query to join books and authors
-            var query = from book in queryable
-                        join author in await _authorRepository.GetQueryableAsync() on book.AuthorId equals author.Id
-                        where book.Id == id
-                        select new { book, author };
+        //    //Prepare a query to join books and authors
+        //    var query = from book in queryable
+        //                join author in await _authorRepository.GetQueryableAsync() on book.AuthorId equals author.Id
+        //                where book.Id == id
+        //                select new { book, author };
 
-            //Execute the query and get the book with author
-            var queryResult = await AsyncExecuter.FirstOrDefaultAsync(query);
-            if (queryResult == null)
-            {
-                throw new EntityNotFoundException(typeof(Book), id);
-            }
+        //    //Execute the query and get the book with author
+        //    var queryResult = await AsyncExecuter.FirstOrDefaultAsync(query);
+        //    if (queryResult == null)
+        //    {
+        //        throw new EntityNotFoundException(typeof(Book), id);
+        //    }
 
-            var bookDto = ObjectMapper.Map<Book, BookDto>(queryResult.book);
-            bookDto.AuthorName = queryResult.author.Name;
-            return bookDto;
-        }
+        //    var bookDto = ObjectMapper.Map<Book, BookDto>(queryResult.book);
+        //    bookDto.AuthorName = queryResult.author.Name;
+        //    return bookDto;
+        //}
       
        
         public async Task<ListResultDto<AuthorLookupDto>> GetAuthorLookupAsync()
@@ -104,7 +99,7 @@ namespace Acme.BookStore.Books
                 {
                     var book = ObjectMapper.Map<CreateUpdateBookDto, Book>(item);
                     book.AuthorId = authorId;
-                    await _bookRepository.InsertAsync(book);
+                    await Repository.InsertAsync(book);
                 }
                  result = new AuthorBooksDto
                 {
@@ -133,7 +128,7 @@ namespace Acme.BookStore.Books
             {
                 throw new EntityNotFoundException(typeof(Author),authorId);
             }
-            await _bookRepository.DeleteAsync(b=>b.AuthorId==authorId);
+            await Repository.DeleteAsync(b=>b.AuthorId==authorId);
             await _authorRepository.DeleteAsync(authorId);  
 
         }
@@ -155,20 +150,27 @@ namespace Acme.BookStore.Books
                 language = input.Language,
                  Name=input.Name
             });
-            await _bookRepository.UpdateAsync(book);
+            await Repository.UpdateAsync(book);
         }
 
         protected override async Task<IQueryable<Book>> CreateFilteredQueryAsync(BookPagedAndSortedResultRequestDto input)
         {
-            var query = (await base.CreateFilteredQueryAsync(input))
+         
+      
+            var temp = (await Repository.WithDetailsAsync())
                 .WhereIf(!input.Name.IsNullOrEmpty(), x => x.Name.Contains(input.Name))
                 .WhereIf(input.MinPrice.HasValue, x => x.Price >= input.MinPrice)
                 .WhereIf(input.MaxPrice.HasValue, x => x.Price <= input.MaxPrice)
-                .WhereIf(input.PublishDate.HasValue, x => x.PublishDate.Date == input.PublishDate.Value.Date);
-
-            return query;
+                .WhereIf(input.PublishDate.HasValue, x => x.PublishDate.Date == input.PublishDate.Value.Date)
+                ;
+            return temp;
         }
-
+        public override  Task<PagedResultDto<BookDto>> GetListAsync(BookPagedAndSortedResultRequestDto input)
+        {
+            var result= base.GetListAsync(input);
+            return result;
+          
+        }
         protected override IQueryable<Book> ApplySorting(IQueryable<Book> query, BookPagedAndSortedResultRequestDto input)
         {
             return base.ApplySorting(query, input);
