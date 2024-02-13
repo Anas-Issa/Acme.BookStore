@@ -171,28 +171,7 @@ namespace Acme.BookStore.Authors
             //No paging
             return query;
         }
-        //public async Task<PagedResultDto<AuthorDto>> GetListAsync(AuthorPagedAndSortedResultRequestDto input)
-        //{
-        //    var filter = ObjectMapper.Map<AuthorPagedAndSortedResultRequestDto, AuthorFilter>(input);
-
-        //    var sorting = (string.IsNullOrEmpty(input.Sorting) ? "Name DESC" : input.Sorting).Replace("ShortName", "Name");
-
-        //    var temp = await _authorRepository.GetListAsync(includeDetails:true);
-        //    var queryable = await _authorRepository.GetQueryableAsync();
-
-        //    var authors= await AsyncExecuter.ToListAsync(queryable
-        //        .WhereIf(!filter.Name.IsNullOrWhiteSpace(), x => x.Name.Contains(filter.Name))
-        //        .OrderBy(a=>input.Sorting)
-        //        .Skip(input.SkipCount)
-        //        .Take(input.MaxResultCount)
-
-        //        );
-        //    var totalCount =await _authorRepository.CountAsync();
-        //    var authorDtos=ObjectMapper.Map<List<Author>,List< AuthorDto >> (authors);
-
-        //    return new PagedResultDto<AuthorDto>(totalCount, authorDtos);
-
-        //}
+    
         [Authorize(BookStorePermissions.Authors.Edit)]
         public async Task<AuthorBooksDto> UpdateAsync(Guid id, CreateAuthorBooksDto input)
         {
@@ -247,39 +226,9 @@ namespace Acme.BookStore.Authors
             };
 
             return result;
-            //foreach (var bookToRemove in booksToRemove)
-            //{
-            //    existingAuthor.Books.Remove(bookToRemove);
-            //    await _bookRepository.DeleteAsync(bookToRemove.Id);
-            //}
-            //// Update or add books
-
-            //foreach (var bookDto in input.Books )
-            //{
-            //    var existingBook = existingAuthor.Books.FirstOrDefault(book => book.Id == bookDto.Id);
-
-            //    if (existingBook != null)
-            //    {
-            //        // Update existing book
-            //        ObjectMapper.Map(bookDto, existingBook);
-            //        await _bookRepository.UpdateAsync(existingBook);
-            //    }
-            //    else
-            //    {
-            //        // Add new book
-            //        var newBook = ObjectMapper.Map<CreateUpdateBookDto, Book>(bookDto);
-            //        newBook.AuthorId = existingAuthor.Id;
-            //        await _bookRepository.InsertAsync(newBook);
-            //    }
+            
         }
 
-        //public async Task<AuthorDto> GetAuthorWithBooksAsync(Guid id)
-        //{
-        //    var author = await _authorRepository.GetAsync(id);
-        //    await _authorRepository.EnsureCollectionLoadedAsync(author,a=>a.Books);
-            
-            
-        //   return  ObjectMapper.Map<Author, AuthorDto>(author);
-        //}
+       
     }
 }

@@ -46,28 +46,6 @@ namespace Acme.BookStore.Books
             DeletePolicyName= BookStorePermissions.Books.Delete;
         }
  
-        //public override async Task<BookDto> GetAsync(Guid id)
-        //{
-        //    //Get the IQueryable<Book> from the repository
-        //    var queryable = await _bookRepository.GetQueryableAsync();
-
-        //    //Prepare a query to join books and authors
-        //    var query = from book in queryable
-        //                join author in await _authorRepository.GetQueryableAsync() on book.AuthorId equals author.Id
-        //                where book.Id == id
-        //                select new { book, author };
-
-        //    //Execute the query and get the book with author
-        //    var queryResult = await AsyncExecuter.FirstOrDefaultAsync(query);
-        //    if (queryResult == null)
-        //    {
-        //        throw new EntityNotFoundException(typeof(Book), id);
-        //    }
-
-        //    var bookDto = ObjectMapper.Map<Book, BookDto>(queryResult.book);
-        //    bookDto.AuthorName = queryResult.author.Name;
-        //    return bookDto;
-        //}
       
        
         public async Task<ListResultDto<AuthorLookupDto>> GetAuthorLookupAsync()
