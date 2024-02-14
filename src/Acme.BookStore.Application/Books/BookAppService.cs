@@ -17,6 +17,7 @@ using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Linq;
 using System.Linq.Dynamic.Core;
 using static OpenIddict.Abstractions.OpenIddictConstants;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Acme.BookStore.Books
 {
@@ -45,9 +46,9 @@ namespace Acme.BookStore.Books
             UpdatePolicyName = BookStorePermissions.Books.Edit;
             DeletePolicyName= BookStorePermissions.Books.Delete;
         }
- 
-      
-       
+
+
+        
         public async Task<ListResultDto<AuthorLookupDto>> GetAuthorLookupAsync()
         {
             var authors = await _authorRepository.GetListAsync();
@@ -56,7 +57,11 @@ namespace Acme.BookStore.Books
             return result;
 
         }
-
+        [Authorize("BookCreation")]
+        public override Task<BookDto> CreateAsync(CreateUpdateBookDto input)
+        {
+            return base.CreateAsync(input);
+        }
         public  async Task<AuthorBooksDto> CreateAuthorBooksAsync(CreateAuthorBooksDto input)
         {
             var existingAuthor = await _authorRepository.FindByNameAsync(input.Author.Name);

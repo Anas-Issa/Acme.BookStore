@@ -1,0 +1,47 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Volo.Abp.Domain.Services;
+using Volo.Abp.Identity;
+using Volo.Abp;
+
+namespace Acme.BookStore.IDentity
+{
+    public class IdentityClaimTypeManager : DomainService
+    {
+        protected IIdentityClaimTypeRepository IdentityClaimTypeRepository { get; }
+
+        public IdentityClaimTypeManager(IIdentityClaimTypeRepository identityClaimTypeRepository)
+        {
+            IdentityClaimTypeRepository = identityClaimTypeRepository;
+        }
+
+        public virtual async Task<IdentityClaimType> CreateAsync(IdentityClaimType claimType)
+        {
+            if (await IdentityClaimTypeRepository.AnyAsync(claimType.Name))
+            {
+                throw new BusinessException(IdentityErrorCodes.ClaimNameExist).WithData("0", claimType.Name);
+            }
+
+            return await IdentityClaimTypeRepository.InsertAsync(claimType);
+        }
+
+        public virtual async Task<IdentityClaimType> UpdateAsync(IdentityClaimType claimType)
+        {
+            if (await IdentityClaimTypeRepository.AnyAsync(claimType.Name, claimType.Id))
+            {
+                throw new AbpException($"Name Exist: {claimType.Name}");
+            }
+
+            if (claimType.IsStatic)
+            {
+                throw new AbpException($"Can not update a static ClaimType.");
+            }
+
+
+            return await IdentityClaimTypeRepository.UpdateAsync(claimType);
+        }
+    }
+}

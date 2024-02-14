@@ -63,7 +63,7 @@ public class BookStoreHttpApiHostModule : AbpModule
     {
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
-
+        
         ConfigureAuthentication(context);
         ConfigureBundles();
         ConfigureUrls(configuration);

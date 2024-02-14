@@ -6,6 +6,10 @@ using Volo.Abp.Modularity;
 using Volo.Abp.PermissionManagement;
 using Volo.Abp.SettingManagement;
 using Volo.Abp.TenantManagement;
+using Volo.Abp.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using Acme.BookStore.Books;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Acme.BookStore;
 
@@ -27,5 +31,20 @@ public class BookStoreApplicationModule : AbpModule
         {
             options.AddMaps<BookStoreApplicationModule>();
         });
+        Configure<AuthorizationOptions>(options =>
+        {
+            options.AddPolicy
+            (
+                "BookCreation",
+                policy => policy.Requirements.Add
+                (
+                    new BookCreationRequirment()
+                    )
+
+                );
+        });
+        context.Services.AddSingleton<IAuthorizationHandler, BookCreateionRequiremantHandler>();
+
+
     }
 }

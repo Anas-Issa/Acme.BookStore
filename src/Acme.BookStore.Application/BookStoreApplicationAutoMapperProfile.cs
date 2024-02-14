@@ -47,6 +47,8 @@ public class BookStoreApplicationAutoMapperProfile : Profile
         CreateMap<MemberBook,MemberBooksDto>()
             .ForMember(des=>des.BookName,src=>src.MapFrom(m=>m.Book.Name));
 
+        CreateMap<CreateUpdateMemberDto, Member>();
+
 
     }
 }
