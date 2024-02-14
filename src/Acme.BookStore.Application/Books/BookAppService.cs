@@ -136,8 +136,7 @@ namespace Acme.BookStore.Books
                 .WhereIf(!input.Name.IsNullOrEmpty(), x => x.Name.Contains(input.Name))
                 .WhereIf(input.MinPrice.HasValue, x => x.Price >= input.MinPrice)
                 .WhereIf(input.MaxPrice.HasValue, x => x.Price <= input.MaxPrice)
-                .WhereIf(input.PublishDate.HasValue, x => x.PublishDate.Date == input.PublishDate.Value.Date)
-                ;
+                .WhereIf(input.PublishDate.HasValue, x => x.PublishDate.Date == input.PublishDate.Value.Date);
            
         }
         public override  Task<PagedResultDto<BookDto>> GetListAsync(BookPagedAndSortedResultRequestDto input)

@@ -44,6 +44,8 @@ public class BookStoreApplicationAutoMapperProfile : Profile
         CreateMap<AuthorPagedAndSortedResultRequestDto, AuthorFilter>();
         CreateMap<CreateUpdateMemberDto, Member>();
         CreateMap <Member, MemberDto>();
+        CreateMap<MemberBook,MemberBooksDto>()
+            .ForMember(des=>des.BookName,src=>src.MapFrom(m=>m.Book.Name));
 
 
     }

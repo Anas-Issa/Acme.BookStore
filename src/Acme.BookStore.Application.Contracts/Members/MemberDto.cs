@@ -11,6 +11,6 @@ namespace Acme.BookStore.Members
 
         public string Notes { get; set; }
 
-        public List<MemberBooksDtoDto> MemberBooks { get; set; }
+        public List<MemberBooksDto> MemberBooks { get; set; }
     }
 }
